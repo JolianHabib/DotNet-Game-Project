@@ -1,0 +1,51 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Checkers Game ♟</h1>
+        <p class="lead">A network-based checkers game where you play against the Server!</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            How to Play
+        </div>
+        <div class="card-body">
+            <ol>
+                <li>Go to <strong>Register</strong> and create your account.</li>
+                <li>Open the <strong>Game Client</strong> application.</li>
+                <li>Enter your <strong>Player ID</strong> and press <strong>Start Game</strong>.</li>
+                <li>Play against the Server — good luck!</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Game Rules
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>The board is <strong>8×4</strong>.</li>
+                <li>Move diagonally forward one square at a time (square must be empty).</li>
+                <li>Each soldier may move <strong>one step backward</strong> only once per game.</li>
+                <li>You can eat an opponent's soldier by jumping over it diagonally forward (landing square must be empty).</li>
+                <li>Only <strong>one eat per turn</strong> is allowed.</li>
+                <li>You <strong>win</strong> if your soldier reaches the first row on the opponent's side.</li>
+                <li>You also win if the opponent has <strong>no valid moves</strong>.</li>
+                <li>Each turn has a <strong>time limit</strong> (2, 5, or 15 seconds — your choice).</li>
+                <li>If time runs out, you <strong>lose automatically</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-page="/Register" class="btn btn-success btn-lg me-2">Register Now</a>
+        <a asp-page="/Queries" class="btn btn-primary btn-lg me-2">View Queries</a>
+        <a asp-page="/About" class="btn btn-secondary btn-lg">About</a>
+    </div>
+</div>

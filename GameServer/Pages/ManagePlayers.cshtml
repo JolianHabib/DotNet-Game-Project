@@ -1,0 +1,165 @@
+﻿@page
+@model GameServer.Pages.ManagePlayersModel
+@{
+    ViewData["Title"] = "Manage Players";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Manage Players & Games</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-success">@Model.Message</div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Players
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Phone</th>
+                        <th>Country</th>
+                        <th>Games</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Players)
+                    {
+                        <tr>
+                            <td>@p.FirstName</td>
+                            <td>@p.IdentityNumber</td>
+                            <td>@p.Phone</td>
+                            <td>@p.Country.Name</td>
+                            <td>@p.Games.Count</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary"
+                                        data-id="@p.Id"
+                                        data-name="@p.FirstName"
+                                        data-phone="@p.Phone"
+                                        data-country="@p.CountryId"
+                                        onclick="showEdit(this)"> Edit
+                                </button>
+
+                                <form method="post" asp-page-handler="DeletePlayer"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Delete player @p.FirstName and all their games?')">
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <tr id="edit-@p.Id" style="display:none; background:#f8f9fa">
+                            <td colspan="6">
+                                <form method="post" asp-page-handler="Update">
+                                    <input type="hidden" asp-for="EditPlayer.Id"
+                                           value="@p.Id" />
+                                    <div class="row g-2">
+                                        <div class="col-md-3">
+                                            <input asp-for="EditPlayer.FirstName"
+                                                   class="form-control"
+                                                   placeholder="First Name" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input asp-for="EditPlayer.Phone"
+                                                   class="form-control"
+                                                   placeholder="Phone" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select asp-for="EditPlayer.CountryId"
+                                                    asp-items="Model.CountryOptions"
+                                                    class="form-select">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit"
+                                                    class="btn btn-success">
+                                                Save
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    onclick="hideEdit(@p.Id)">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Games
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Start Time</th>
+                        <th>Duration</th>
+                        <th>Result</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Players)
+                    {
+                        @foreach (var g in p.Games)
+                        {
+                            <tr>
+                                <td>@p.FirstName</td>
+                                <td>@g.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@g.DurationSeconds sec</td>
+                                <td>@g.Result</td>
+                                <td>
+                                    <form method="post" asp-page-handler="DeleteGame"
+                                          style="display:inline"
+                                          onsubmit="return confirm('Delete this game?')">
+                                        <input type="hidden" name="id" value="@g.Id" />
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+        function showEdit(btn) {
+        var id = btn.getAttribute('data-id');
+        var name = btn.getAttribute('data-name');
+        var phone = btn.getAttribute('data-phone');
+        var countryId = btn.getAttribute('data-country');
+
+        var row = document.getElementById('edit-' + id);
+        row.style.display = 'table-row';
+        row.querySelector('input[name="EditPlayer.FirstName"]').value = name;
+        row.querySelector('input[name="EditPlayer.Phone"]').value = phone;
+        row.querySelector('select').value = countryId;
+    }
+
+    function hideEdit(id) {
+        document.getElementById('edit-' + id).style.display = 'none';
+    }
+</script>

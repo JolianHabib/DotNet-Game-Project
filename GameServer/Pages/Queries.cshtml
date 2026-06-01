@@ -1,0 +1,258 @@
+﻿@page
+@model GameServer.Pages.QueriesModel
+@{
+    ViewData["Title"] = "Queries";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Game Queries</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q22 - All Players Who Played
+            <a asp-page="/Queries" asp-route-SortOrder="asc"
+               class="btn btn-sm btn-light ms-2">Sort A-Z</a>
+            <a asp-page="/Queries" asp-route-SortOrder="desc"
+               class="btn btn-sm btn-light ms-1">Sort Z-A</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>ID</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Q22_Players)
+                    {
+                        <tr>
+                            <td>@p.FirstName</td>
+                            <td>@p.Phone</td>
+                            <td>@p.IdentityNumber</td>
+                            <td>@p.Country.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q23 - Players & Last Game Date (Desc)
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead><tr><th>Name</th><th>Last Game</th></tr></thead>
+                <tbody>
+                    @foreach (dynamic p in Model.Q23_Players)
+                    {
+                        <tr>
+                            <td>@p.FirstName</td>
+                            <td>@p.LastGame.ToString("yyyy-MM-dd")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q24 - All Games
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Start Time</th>
+                        <th>Duration</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var g in Model.Q24_Games)
+                    {
+                        <tr>
+                            <td>@g.Player.FirstName</td>
+                            <td>@g.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@g.DurationSeconds sec</td>
+                            <td>@g.Result</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q25 - First Player From Each Country
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead><tr><th>Country</th><th>First Player</th></tr></thead>
+                <tbody>
+                    @foreach (dynamic p in Model.Q25_FirstPlayers)
+                    {
+                        <tr>
+                            <td>@p.Country</td>
+                            <td>@p.Player</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q26 - Games by Player
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-3">
+                        <select name="SelectedPlayer" asp-items="Model.PlayerNames"
+                                class="form-select">
+                            <option value="">-- Select Player --</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
+            @if (Model.Q26_Games.Any())
+            {
+                <h5 class="mb-3">Games for player: <strong>@Model.SelectedPlayer</strong></h5>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Start Time</th>
+                            <th>Duration</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var g in Model.Q26_Games)
+                        {
+                            <tr>
+                                <td>@g.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@g.DurationSeconds sec</td>
+                                <td>@g.Result</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q27 - Game Count Per Player
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead><tr><th>Player</th><th>Games</th></tr></thead>
+                <tbody>
+                    @foreach (dynamic p in Model.Q27_PlayerGameCount)
+                    {
+                        <tr>
+                            <td>@p.FirstName</td>
+                            <td>@p.GameCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q28 - Players Grouped by Game Count
+        </div>
+        <div class="card-body">
+            @foreach (var group in Model.Q28_Groups)
+            {
+                <h5 class="mt-3">@group.Key game(s):</h5>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in group)
+                        {
+                            <tr>
+                                <td>@p.FirstName</td>
+                                <td>@p.Phone</td>
+                                <td>@p.IdentityNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q29 - Players Grouped by Country
+        </div>
+        <div class="card-body">
+            @foreach (var group in Model.Q29_ByCountry)
+            {
+                <h5 class="mt-3">@group.Key:</h5>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in group)
+                        {
+                            <tr>
+                                <td>@p.FirstName</td>
+                                <td>@p.Phone</td>
+                                <td>@p.IdentityNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+            Q30 - Top 2 Countries by Games
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead><tr><th>Country</th><th>Games</th></tr></thead>
+                <tbody>
+                    @foreach (dynamic c in Model.Q30_TopCountries)
+                    {
+                        <tr>
+                            <td>@c.Country</td>
+                            <td>@c.GameCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

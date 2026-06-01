@@ -1,0 +1,96 @@
+﻿@page
+@model GameServer.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register Players";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Player Registration</h2>
+
+    <form method="get">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Number of Players:</label>
+                <select name="PlayerCount" class="form-select"
+                        onchange="window.location.href='/Register?PlayerCount=' + this.value">
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i" selected="@(Model.PlayerCount == i)">@i</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <form method="post">
+        <input type="hidden" asp-for="PlayerCount" />
+
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+        {
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        }
+        @for (int i = 0; i < Model.PlayerCount; i++)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-dark text-white fw-bold">
+                    Player @(i + 1)
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <label class="form-label">First Name</label>
+                            <input asp-for="Players[@i].FirstName"
+                                   class="form-control" placeholder="First Name" />
+                            <span asp-validation-for="Players[@i].FirstName"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">ID Number (1-1000)</label>
+                            <input asp-for="Players[@i].IdentityNumber"
+                                   class="form-control" type="number" />
+                            <span asp-validation-for="Players[@i].IdentityNumber"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Phone (10 digits)</label>
+                            <input asp-for="Players[@i].Phone"
+                                   class="form-control" placeholder="0501234567" />
+                            <span asp-validation-for="Players[@i].Phone"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Country</label>
+                            <select asp-for="Players[@i].CountryId"
+                                    asp-items="Model.CountryOptions"
+                                    class="form-select">
+                                <option value="0">-- Select Country --</option>
+                            </select>
+                            <span asp-validation-for="Players[@i].CountryId"
+                                  class="text-danger small"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success btn-lg">
+            Register & Start Game
+        </button>
+    </form>
+
+    @if (Model.RegistrationSuccess)
+    {
+        <div class="alert alert-success mt-4">
+            <h4>Registration Successful!</h4>
+            <p>All players have been registered. The game can now begin!</p>
+        </div>
+    }
+</div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,18 @@
+Known Issues - Checkers Game
+
+
+Submitted by:
+Name: Jolian Habib
+ID: 211613526
+
+
+Known Issues:
+
+No known issues at this time. All features have been implemented
+and tested successfully according to the project specifications.
+
+
+Note:
+The "packages" folder has been included as it is required by the GameClient project
+(.NET Framework) to resolve NuGet dependencies (EntityFramework 6.4.4).
+This folder is necessary to run the project successfully.
